@@ -17,43 +17,43 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/tourze/tls-session.svg?style=flat-square)]
 (https://packagist.org/packages/tourze/tls-session)
 
-A PHP library for TLS session management and maintenance, providing comprehensive session handling,
-ticket management, and resumption capabilities for TLS 1.2 and TLS 1.3 protocols.
+一个用于TLS会话管理和维护的PHP库，提供TLS 1.2和TLS 1.3协议的全面会话处理、
+票据管理和恢复功能。
 
-## Table of Contents
+## 目录
 
-- [Features](#features)
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Advanced Usage](#advanced-usage)
-- [Requirements](#requirements)
-- [API Documentation](#api-documentation)
-- [Testing](#testing)
-- [Contributing](#contributing)
-- [License](#license)
+- [功能特性](#功能特性)
+- [安装](#安装)
+- [快速开始](#快速开始)
+- [高级用法](#高级用法)
+- [系统要求](#系统要求)
+- [API 文档](#api-文档)
+- [测试](#测试)
+- [贡献](#贡献)
+- [许可证](#许可证)
 
-## Features
+## 功能特性
 
-- **Session Management**: Create, store, and retrieve TLS sessions
-- **Session Tickets**: Generate, encrypt, and decrypt session tickets
-- **Session Resumption**: Support for TLS session resumption
-- **TLS 1.3 PSK Sessions**: Pre-shared key sessions with early data support
-- **Session Security**: Secure session validation and cleanup
-- **Key Management**: Automatic key rotation and management
-- **Memory Cache**: In-memory session storage implementation
-- **Session Timeout**: Automatic expiration and cleanup
-- **0-RTT Data**: Support for TLS 1.3 0-RTT data transmission
-- **Cross-Connection**: Session data handling across connections
+- **会话管理**: 创建、存储和检索TLS会话
+- **会话票据**: 生成、加密和解密会话票据
+- **会话恢复**: 支持TLS会话恢复功能
+- **TLS 1.3 PSK会话**: 支持早期数据的预共享密钥会话
+- **会话安全**: 安全的会话验证和清理
+- **密钥管理**: 自动密钥轮换和管理
+- **内存缓存**: 内存会话存储实现
+- **会话超时**: 自动过期和清理
+- **0-RTT数据**: 支持TLS 1.3 0-RTT数据传输
+- **跨连接**: 跨连接的会话数据处理
 
-## Installation
+## 安装
 
 ```bash
 composer require tourze/tls-session
 ```
 
-## Quick Start
+## 快速开始
 
-### Basic Session Management
+### 基础会话管理
 
 ```php
 <?php
@@ -61,26 +61,26 @@ composer require tourze/tls-session
 use Tourze\TLSSession\InMemorySessionManager;
 use Tourze\TLSSession\TLSSession;
 
-// Create a session manager
+// 创建会话管理器
 $sessionManager = new InMemorySessionManager();
 
-// Create a new session
+// 创建新会话
 $session = $sessionManager->createSession(
     'TLS_AES_256_GCM_SHA384',
     'master_secret_here'
 );
 
-// Store the session
+// 存储会话
 $sessionManager->storeSession($session);
 
-// Retrieve session by ID
+// 通过ID检索会话
 $retrievedSession = $sessionManager->getSessionById($session->getSessionId());
 
-// Clean expired sessions
+// 清理过期会话
 $cleanedCount = $sessionManager->cleanExpiredSessions();
 ```
 
-### Session Ticket Management
+### 会话票据管理
 
 ```php
 <?php
@@ -88,10 +88,10 @@ $cleanedCount = $sessionManager->cleanExpiredSessions();
 use Tourze\TLSSession\SessionTicketManager;
 use Tourze\TLSSession\TLSSession;
 
-// Create a ticket manager
+// 创建票据管理器
 $ticketManager = new SessionTicketManager();
 
-// Create a session
+// 创建会话
 $session = new TLSSession(
     sessionId: 'session_123',
     masterSecret: 'secret_key',
@@ -99,14 +99,14 @@ $session = new TLSSession(
     tlsVersion: 0x0303
 );
 
-// Create a session ticket
+// 创建会话票据
 $ticket = $ticketManager->createTicket($session);
 
-// Decrypt the ticket to restore session
+// 解密票据以恢复会话
 $restoredSession = $ticketManager->decryptTicket($ticket);
 ```
 
-### TLS 1.3 PSK Sessions
+### TLS 1.3 PSK 会话
 
 ```php
 <?php
@@ -114,10 +114,10 @@ $restoredSession = $ticketManager->decryptTicket($ticket);
 use Tourze\TLSSession\TLS13PSKSession;
 use Tourze\TLSSession\TLS13PSKSessionManager;
 
-// Create PSK session manager
+// 创建 PSK 会话管理器
 $pskManager = new TLS13PSKSessionManager();
 
-// Create PSK session with early data support
+// 创建支持早期数据的 PSK 会话
 $pskSession = new TLS13PSKSession(
     sessionId: 'psk_session_123',
     cipherSuite: 0x1301, // TLS_AES_128_GCM_SHA256
@@ -126,14 +126,14 @@ $pskSession = new TLS13PSKSession(
     ticketNonce: 'nonce_value'
 );
 
-// Enable early data
+// 启用早期数据
 $pskSession->setMaxEarlyDataSize(4096);
 
-// Store PSK session
+// 存储 PSK 会话
 $pskManager->storeSession($pskSession);
 ```
 
-### Session Security Validation
+### 会话安全验证
 
 ```php
 <?php
@@ -141,10 +141,10 @@ $pskManager->storeSession($pskSession);
 use Tourze\TLSSession\SessionSecurityValidator;
 use Tourze\TLSSession\TLSSession;
 
-// Create validator
+// 创建验证器
 $validator = new SessionSecurityValidator();
 
-// Validate TLS 1.2 session security
+// 验证 TLS 1.2 会话安全性
 $session = new TLSSession(
     sessionId: 'session_123',
     masterSecret: 'secret_key',
@@ -153,17 +153,17 @@ $session = new TLSSession(
 );
 $isValid = $validator->validateTLS12Session($session, 'TLS_AES_256_GCM_SHA384', 0x0303);
 
-// Validate TLS 1.3 PSK session
+// 验证 TLS 1.3 PSK 会话
 $pskSession = new TLS13PSKSession(/* ... */);
 $isPskValid = $validator->validateTLS13PSK($pskSession, 'TLS_AES_128_GCM_SHA256');
 
-// Check session expiration
+// 检查会话是否过期
 $isExpired = !$session->isValid();
 ```
 
-## Advanced Usage
+## 高级用法
 
-### Custom Session Storage
+### 自定义会话存储
 
 ```php
 <?php
@@ -171,24 +171,24 @@ $isExpired = !$session->isValid();
 use Tourze\TLSSession\SessionManagerInterface;
 use Tourze\TLSSession\SessionInterface;
 
-// Implement custom session storage
+// 实现自定义会话存储
 class DatabaseSessionManager implements SessionManagerInterface
 {
     public function createSession(string $cipherSuite, string $masterSecret): SessionInterface
     {
-        // Custom implementation for database storage
+        // 数据库存储的自定义实现
     }
     
     public function storeSession(SessionInterface $session): void
     {
-        // Store session in database
+        // 在数据库中存储会话
     }
     
-    // ... other interface methods
+    // ... 其他接口方法
 }
 ```
 
-### Session Validation Rules
+### 会话验证规则
 
 ```php
 <?php
@@ -197,7 +197,7 @@ use Tourze\TLSSession\SessionSecurityValidator;
 
 $validator = new SessionSecurityValidator();
 
-// Define server security options
+// 定义服务器安全选项
 $serverOptions = [
     'allowDowngrade' => false,
     'requireExactMatch' => true,
@@ -208,11 +208,11 @@ $serverOptions = [
     ],
 ];
 
-// Validate session against server options
+// 根据服务器选项验证会话
 $isValid = $validator->validateSessionAgainstServerOptions($session, $serverOptions);
 ```
 
-### Early Data Management
+### 早期数据管理
 
 ```php
 <?php
@@ -222,67 +222,67 @@ use Tourze\TLSSession\TLS13PSKSession;
 
 $earlyDataManager = new EarlyDataManager();
 
-// Check if early data is allowed
+// 检查是否允许早期数据
 if ($earlyDataManager->isEarlyDataAllowed($pskSession)) {
     $earlyData = $earlyDataManager->processEarlyData($data, $pskSession);
 }
 ```
 
-## Requirements
+## 系统要求
 
-- PHP 8.1 or higher
-- OpenSSL extension
+- PHP 8.1 或更高版本
+- OpenSSL 扩展
 - tourze/tls-common
 - tourze/tls-crypto-hash
 - tourze/tls-crypto-symmetric
 - tourze/tls-handshake-flow
 - tourze/tls-x509-core
 
-## API Documentation
+## API 文档
 
 ### SessionInterface
 
-Core interface for all session types:
+所有会话类型的核心接口：
 
-- `getSessionId()`: Get session identifier
-- `getCipherSuite()`: Get cipher suite
-- `getMasterSecret()`: Get master secret
-- `getCreationTime()`: Get creation timestamp
-- `isValid()`: Check if session is valid
+- `getSessionId()`: 获取会话标识符
+- `getCipherSuite()`: 获取加密套件
+- `getMasterSecret()`: 获取主密钥
+- `getCreationTime()`: 获取创建时间戳
+- `isValid()`: 检查会话是否有效
 
 ### SessionManagerInterface
 
-Session management interface:
+会话管理接口：
 
-- `createSession()`: Create new session
-- `getSessionById()`: Retrieve session by ID
-- `storeSession()`: Store session
-- `removeSession()`: Remove session
-- `cleanExpiredSessions()`: Clean expired sessions
+- `createSession()`: 创建新会话
+- `getSessionById()`: 通过ID检索会话
+- `storeSession()`: 存储会话
+- `removeSession()`: 删除会话
+- `cleanExpiredSessions()`: 清理过期会话
 
 ### SessionTicketManager
 
-Session ticket management:
+会话票据管理：
 
-- `createTicket()`: Create encrypted session ticket
-- `decryptTicket()`: Decrypt and validate ticket
-- `rotateKeys()`: Rotate encryption keys
-- `getTicketLifetime()`: Get ticket lifetime
+- `createTicket()`: 创建加密会话票据
+- `decryptTicket()`: 解密和验证票据
+- `rotateKeys()`: 轮换加密密钥
+- `getTicketLifetime()`: 获取票据生命周期
 
-## Testing
+## 测试
 
 ```bash
-# Run all tests
+# 运行所有测试
 vendor/bin/phpunit packages/tls-session/tests
 
-# Run with coverage
+# 运行覆盖率测试
 vendor/bin/phpunit packages/tls-session/tests --coverage-html coverage
 ```
 
-## Contributing
+## 贡献
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+欢迎贡献代码！请随时提交Pull Request。
 
-## License
+## 许可证
 
-The MIT License (MIT). Please see [License File](LICENSE) for more information. 
+MIT许可证。请查看[LICENSE](LICENSE)文件以获取更多信息。
